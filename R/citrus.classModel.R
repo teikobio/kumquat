@@ -34,12 +34,12 @@ citrus.buildModel.classification <- function(features, labels, type, regularizat
         model <- glmnet::glmnet(x = features, y = labels, family = family, lambda = regularizationThresholds, 
             alpha = alpha, standardize = standardize)
     } else if (type == "sam") {
-        if ("family" %in% names(addtlArgs)){
-            family <- addtlArgs[["family"]] 
-        } else if (!("family" %in% addtlArgs)){
-            family <- "Two class unpaired"
+        if ("resp.type" %in% names(addtlArgs)){
+            resp.type <- addtlArgs[["resp.type"]]
+        } else if (!("resp.type" %in% addtlArgs)){
+            resp.type <- "Two class unpaired"
             if (length(unique(labels)) > 2) {
-                family <- "Multiclass"
+                resp.type <- "Multiclass"
             }
         }
         if ("testStatistic" %in% names(addtlArgs)){ 
@@ -47,9 +47,11 @@ citrus.buildModel.classification <- function(features, labels, type, regularizat
         } else {
             testStatistic <- "wilcoxon"
         }
-        print(paste("The test statisitc is:", testStatistic))
+        message("The test statisitc is:", testStatistic)
+        message("The resp.type is:", resp.type)
+        
         noVarianceFeatures <- apply(features, 2, var) == 0
-        model <- samr::SAM(x = t(features[, !noVarianceFeatures]), y = labels, resp.type = family, 
+        model <- samr::SAM(x = t(features[, !noVarianceFeatures]), y = labels, resp.type = resp.type, 
             genenames = colnames(features[, !noVarianceFeatures]), nperms = 10000, testStatistic = testStatistic)
     } else {
         stop(paste("Type:", type, "not yet implemented"))
