@@ -74,7 +74,7 @@ citrus.generateRegularizationThresholds <- function(features, labels, modelType,
 #' @param foldModels Models constructed from each fold of features.
 #' @param leftoutFeatures Features calculated for leftout samples mapped to clustered data space.
 #' @param nCVFolds Number of folds for quick cross-validation.
-#' @param ... Other parameters passsed to model-fitting methods.
+#' @param ... Other parameters passed to model-fitting methods.
 #' 
 #' @details If independent fold-clustering and fold-features are calculated, use \code{citrus.thresholdCVs}. 
 #' If features are derived from a clustering of all samples together, use \code{citrus.thresholdCVs.quick}. See examples.

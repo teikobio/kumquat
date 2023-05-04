@@ -19,16 +19,22 @@ get_model <- function(features, endpoint, model.type, ...) {
     else
         citrus.features <- features
     
-    family <- "classification"
+        family <- NULL
+        
+        addtlArgs <- list(...)
+        if (is.character(endpoint) || is.factor(endpoint)) {
+            family <- "classification"
+            endpoint <- as.factor(endpoint)
     
-    if (is.character(endpoint) || is.factor(endpoint)) {
-        family <- "classification"
-        endpoint <- as.factor(endpoint)
-
-    } else family <- "continuous"
-    
-    citrus.res <- citrus.endpointRegress(model.type, citrus.foldFeatureSet = citrus.features, 
-                                                 labels = endpoint, family = family, ...)
+        } else if ("resp.type" %in% names(addtlArgs)){
+            if(addtlArgs[["resp.type"]] == "Two class paired"){
+                family <- "classification"
+            }
+        } else {
+            family <- "continuous"
+            }
+        citrus.res <- citrus.endpointRegress(model.type, citrus.foldFeatureSet = citrus.features, 
+                                             labels = endpoint, family = family, ...)
     
     citrus.res$allFeatures <- citrus.features$allFeatures
     return(citrus.res)
